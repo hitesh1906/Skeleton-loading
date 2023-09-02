@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import LoadingSkeleton from "./component/loadingSkeleton";
+import ProductDetails from "./component/productDetails";
 
 function App() {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getDetails = async () => {
+      setLoading(true);
+      await fetch(`https://jsonplaceholder.typicode.com/todos`)
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          setTimeout(5000);
+        });
+      setLoading(false);
+    };
+    getDetails();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>{loading ? <LoadingSkeleton /> : <ProductDetails />}</div>
     </div>
   );
 }
